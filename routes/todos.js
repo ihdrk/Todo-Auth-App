@@ -54,24 +54,31 @@ router.put('/:id' , authenticateToken , (req , res) =>
 
      res.status(200).json({message: 'Todo updated successfully',todos : todos[index] });
 
-
-
 });
 
+router.delete('/:id' , authenticateToken , (req ,res)=>
+{
+    const todoId = parseInt(req.params.id);
+    const todos = readTodos();
+    const todo =  todos.find(todo => todo.id === todoId);
 
+    if(!todo)
+    {
+        return res.status(404).json({message : 'Todo not found'});
+    }
+      if(todo.userId !== req.user.userId)
+    {
+        return res.status(403).json({message : 'Access denied'});
+    }
 
+    const index = todos.findIndex(t => t === todo)
+    todos.splice(index ,1);
 
+    writeTodos(todos); //deleted todo
 
+    res.status(200).json({message : 'Todo deleted successfully', todo : todo});
 
-
-
-
-
-
-
-
-
-
+});
 
 
 module.exports = router;

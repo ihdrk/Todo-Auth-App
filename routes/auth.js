@@ -19,15 +19,15 @@ router.post('/register' , async (req , res) =>
         }
 
         const users = readUsers();
-        const existingUser = users.find(user => users.email === email)
+        const existingUser = users.find(user => user.email === email)
 
-        if(!existingUser)
+        if(existingUser)
         {
             return res.status(400).json({ message: 'User already exists' });
         }
 
         const saltRounds = 10;
-        const hashedPassword = bcrypt.hash(password,saltRounds);
+        const hashedPassword = await bcrypt.hash(password,saltRounds);
 
         const newUser = 
         {
@@ -39,7 +39,7 @@ router.post('/register' , async (req , res) =>
         users.push(newUser);
         writeUsers(users);
 
-        req.status(201).json({message:  'User registered successfully', user: {id : newUser.id, email: newUser.email}});
+        res.status(201).json({message:  'User registered successfully', user: {id : newUser.id, email: newUser.email}});
 
     } catch (error)
     {
@@ -75,7 +75,7 @@ router.post('/login', async (req , res) =>
          }
 
          const token = jwt.sign(
-            {userId:user.id, email: user.email},JWT_SECRET,{expires: '24h'}
+            {userId:user.id, email: user.email},JWT_SECRET,{expiresIn: '24h'}
          );
         
          res.json({message : 'Login succesful',
@@ -86,6 +86,7 @@ router.post('/login', async (req , res) =>
     {
          res.status(500).json({ message: 'Server error', error: error.message });
     }
-module.exports = router;
+
 
 });
+module.exports = router;
