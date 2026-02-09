@@ -6,11 +6,10 @@ const todoRoutes  = require('./routes/todos')
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.static('public'))
 
-app.get('/', (req , res)=>
-{
-    res.send('Todo Auth API is running!');
-});
+
+// Removed - index.html will be served by express.static instead
 
 app.use('/auth',authRoutes)
 app.use('/todos',todoRoutes)
