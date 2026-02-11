@@ -3,7 +3,7 @@
 *{
     margin: 0;
     padding: 0;
-    box-sizing: 0;
+    box-sizing: border-box;
 }
 
 body
@@ -126,7 +126,7 @@ a:hover
 
 #message.error
 {
-    background: #efe;
+    background: #fee;
     color: #c33;
     border: 2px solid #c33;
     display: block;
